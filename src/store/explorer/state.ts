@@ -1,4 +1,5 @@
 export default {
   metadata: null,
-  toast: null
+  data: null,
+  toasts: []
 }

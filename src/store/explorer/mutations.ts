@@ -5,9 +5,14 @@ const mutations: MutationTree<ExplorerState> = {
   setMetadata: (state, metadata) => {
     state.metadata = metadata
   },
-  setToast: (state, toast: Toast) => {
-    console.log('setToast')
-    state.toast = toast
+  setData: (state, data) => {
+    state.data = data
+  },
+  addToast: (state, toast: Toast) => {
+    state.toasts.push(toast)
+  },
+  setToasts: (state, toasts: Toast[]) => {
+    state.toasts = toasts
   }
 }
 
