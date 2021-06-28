@@ -1,5 +1,5 @@
 <template>
   <div class="spinner">
-    <p>spinner</p>
+    <font-awesome-icon icon="spinner" spin/>
   </div>
 </template>

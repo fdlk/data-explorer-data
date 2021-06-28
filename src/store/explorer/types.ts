@@ -5,6 +5,7 @@ export enum DataType {
 export interface Attribute {
   name: string
   type: DataType
+  visible: boolean
 }
 
 export interface Metadata {
@@ -22,11 +23,18 @@ export interface Toast {
 // eslint-disable-next-line no-use-before-define
 type DataObjectValue = DataObject | string | boolean | number
 
-type DataObject = { [key: string]: DataObjectValue }
+export type DataObject = { [key: string]: DataObjectValue }
 
 export type Data = {
   items: DataObject[]
   count: number
+}
+
+export interface Pagination {
+  size: number
+  page: number
+  count: number
+  loading: boolean
 }
 
 export interface ExplorerState {
