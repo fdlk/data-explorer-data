@@ -13,7 +13,8 @@ const explorer: Module<ExplorerState, RootState> = {
   state,
   mutations,
   actions,
-  getters
+  getters,
+  namespaced: true
 }
 
 export default explorer
