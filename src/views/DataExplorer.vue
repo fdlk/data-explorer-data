@@ -1,20 +1,37 @@
 <template>
   <div class="dataexplorer">
-    <h1>{{ entityTypeId }}</h1>
+    <toast v-if="toast" v-bind="toast"/>
+    <spinner v-if="metadata === undefined"/>
+    <foo v-else-if="metadata !== null" :meta="metadata"/>
     <data-table/>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import Data from '@/components/Data.vue' // @ is an alias to /src
+import { mapState, mapGetters, mapActions } from 'vuex'
+import Data from '@/components/Data.vue'
+import Metadata from '@/components/Metadata.vue'
+import Spinner from '@/components/Spinner.vue'
+import Toast from '@/components/Toast.vue'
 
 export default Vue.extend({
   name: 'DataExplorer',
-  components: { DataTable: Data },
+  components: { DataTable: Data, Foo: Metadata, Spinner, Toast },
   computed: {
+    ...mapState('explorer', ['metadata', 'toast']),
     ...mapGetters('explorer', ['entityTypeId'])
+  },
+  methods: {
+    ...mapActions('explorer', ['fetchMetadata'])
+  },
+  watch: {
+    entityTypeId: {
+      immediate: true,
+      handler (value) {
+        this.fetchMetadata(value)
+      }
+    }
   }
 })
 </script>

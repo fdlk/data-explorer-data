@@ -1,3 +1,4 @@
 export default {
-  foo: 'foo'
+  metadata: null,
+  toast: null
 }
