@@ -14,10 +14,10 @@ const actions: ActionTree<ExplorerState, RootState> = {
       commit('addToast', { message: e.message, type: 'danger', timeout: 1500 })
     }
   },
-  async fetchData ({ commit, getters: { entityTypeId, page, size } }) {
+  async fetchData ({ commit, getters: { entityTypeId, page, size, sort } }) {
     commit('setData', undefined)
     try {
-      const data = await fetchData(entityTypeId, page, size)
+      const data = await fetchData(entityTypeId, page, size, sort)
       commit('setData', data)
     } catch (e) {
       commit('setData', null)

@@ -1,17 +1,19 @@
 <template>
   <div class="dataexplorer container">
     <toaster v-model="toastsModel" />
-    <spinner v-if="metadata === undefined"/>
-    <foo v-else-if="metadata !== null" :meta="metadata"/>
+    <foo v-if="metadata" :meta="metadata"/>
     <spinner v-if="data === undefined || metadata === undefined"/>
-    <data-table
-      v-else-if="data !== null && metadata !==null"
-      tableName="data"
-      :idAttribute="metadata.idAttribute"
-      :entities = "data.items"
-      :columns = "metadata.attributes.filter(attr => attr.visible)"
-    />
-    <pagination v-model="paginationModel"/>
+    <div v-else>
+      <data-table
+        v-if="data !== null && metadata !==null"
+        tableName="data"
+        :idAttribute="metadata.idAttribute"
+        :entities = "data.items"
+        :columns = "metadata.attributes.filter(attr => attr.visible)"
+        @sort = "setSort"
+      />
+      <pagination v-model="paginationModel"/>
+    </div>
   </div>
 </template>
 
@@ -27,7 +29,7 @@ export default Vue.extend({
   components: { DataTable: Table, Foo: Metadata, Spinner, Toaster, Pagination },
   computed: {
     ...mapState('explorer', ['metadata', 'toasts', 'data']),
-    ...mapGetters('explorer', ['entityTypeId', 'pagination', 'page', 'size']),
+    ...mapGetters('explorer', ['entityTypeId', 'pagination', 'page', 'size', 'sort']),
     toastsModel: {
       get () { return this.toasts },
       set (value) { this.setToasts(value) }
@@ -44,7 +46,20 @@ export default Vue.extend({
   },
   methods: {
     ...mapMutations('explorer', ['setToasts']),
-    ...mapActions('explorer', ['fetchMetadata', 'fetchData'])
+    ...mapActions('explorer', ['fetchMetadata', 'fetchData']),
+    setSort (sort) {
+      if (sort !== this.sort?.sortColumnName) {
+        const query = { ...this.$route.query, sort }
+        this.$router.push({ query })
+      } else if (this.sort.isSortOrderReversed) {
+        const query = { ...this.$route.query }
+        delete query.sort
+        this.$router.push({ query })
+      } else {
+        const query = { ...this.$route.query, sort: `-${sort}` }
+        this.$router.push({ query })
+      }
+    }
   },
   watch: {
     entityTypeId: {
@@ -58,6 +73,9 @@ export default Vue.extend({
       this.fetchData()
     },
     size: function () {
+      this.fetchData()
+    },
+    sort: function () {
       this.fetchData()
     }
   }

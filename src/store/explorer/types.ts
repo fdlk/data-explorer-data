@@ -37,6 +37,11 @@ export interface Pagination {
   loading: boolean
 }
 
+export interface Sort {
+  sortColumnName: string | null
+  isSortOrderReversed: boolean
+}
+
 export interface ExplorerState {
   metadata: Metadata | null | undefined
   data: Data | null | undefined
